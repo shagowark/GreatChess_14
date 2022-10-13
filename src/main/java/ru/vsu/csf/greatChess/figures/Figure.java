@@ -22,6 +22,27 @@ abstract public class Figure {
         return color;
     }
 
-    public abstract boolean moveTo(ChessBoardField wantedField) throws Exception;
+    // разделить на более мелкие, убитые фигуры.
+    public boolean moveTo(ChessBoardField wantedField) throws Exception{
+        if (canMoveTo(wantedField)) {
+            if (wantedField.hasFigure()) {
+                    killOnField(wantedField);
+            }
+            setOnField(wantedField);
+            return true;
+        } else {
+            return false;
+        }
+    }
 
+    public abstract boolean canMoveTo(ChessBoardField wantedField) throws Exception;
+    protected void killOnField(ChessBoardField wantedField){
+        wantedField.getFigure().position = null;
+        chessBoard.addDeadFigure(wantedField.getFigure());
+    }
+    protected void setOnField(ChessBoardField wantedField){
+        wantedField.setFigure(this);
+        this.position.setFigure(null);
+        this.position = wantedField;
+    }
 }

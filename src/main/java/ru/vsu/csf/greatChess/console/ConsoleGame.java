@@ -8,12 +8,13 @@ import java.util.Scanner;
 
 public class ConsoleGame {
     private static boolean nowIsWhiteMove = true;
+    private static boolean gameIsEnded = false;
     public static void startConsoleGame() throws Exception {
         ChessBoard chessBoard = new ChessBoard();
         drawChessBoard(chessBoard);
         Scanner scanner = new Scanner(System.in);
         //todo шах и мат, заграничные координаты
-        while (true){
+        while (!gameIsEnded){
             System.out.println("Введите номер клетки, на которой стоит фигура, которой хотите походить");
             int j = scanner.next().charAt(0) - 97;
             int i = Math.abs(scanner.nextInt() - 10);
@@ -82,50 +83,75 @@ public class ConsoleGame {
 
                 if (chessBoard.getBoardField(i, j).getFigure() == null) {
                     System.out.print("# ");
-                } else if (chessBoard.getBoardField(i, j).getFigure().getColor() == Color.WHITE) {
-                    if (chessBoard.getBoardField(i, j).getFigure().getClass() == Rook.class) {
-                        System.out.print("R ");
-                    } else if (chessBoard.getBoardField(i, j).getFigure().getClass() == Knight.class) {
-                        System.out.print("N ");
-                    } else if (chessBoard.getBoardField(i, j).getFigure().getClass() == Bishop.class) {
-                        System.out.print("B ");
-                    } else if (chessBoard.getBoardField(i, j).getFigure().getClass() == Vizier.class) {
-                        System.out.print("V ");
-                    } else if (chessBoard.getBoardField(i, j).getFigure().getClass() == Giraffe.class) {
-                        System.out.print("G ");
-                    } else if (chessBoard.getBoardField(i, j).getFigure().getClass() == King.class) {
-                        System.out.print("K ");
-                    } else if (chessBoard.getBoardField(i, j).getFigure().getClass() == Queen.class) {
-                        System.out.print("Q ");
-                    } else if (chessBoard.getBoardField(i, j).getFigure().getClass() == CombatMachine.class) {
-                        System.out.print("C ");
-                    } else if (chessBoard.getBoardField(i, j).getFigure().getClass() == Pawn.class) {
-                        System.out.print("p ");
-                    }
                 } else {
-                    if (chessBoard.getBoardField(i, j).getFigure().getClass() == Rook.class) {
-                        System.out.print("\033[3mR \033[0m");
-                    } else if (chessBoard.getBoardField(i, j).getFigure().getClass() == Knight.class) {
-                        System.out.print("\033[3mN \033[0m");
-                    } else if (chessBoard.getBoardField(i, j).getFigure().getClass() == Bishop.class) {
-                        System.out.print("\033[3mB \033[0m");
-                    } else if (chessBoard.getBoardField(i, j).getFigure().getClass() == Vizier.class) {
-                        System.out.print("\033[3mV \033[0m");
-                    } else if (chessBoard.getBoardField(i, j).getFigure().getClass() == Giraffe.class) {
-                        System.out.print("\033[3mG \033[0m");
-                    } else if (chessBoard.getBoardField(i, j).getFigure().getClass() == King.class) {
-                        System.out.print("\033[3mK \033[0m");
-                    } else if (chessBoard.getBoardField(i, j).getFigure().getClass() == Queen.class) {
-                        System.out.print("\033[3mQ \033[0m");
-                    } else if (chessBoard.getBoardField(i, j).getFigure().getClass() == CombatMachine.class) {
-                        System.out.print("\033[3mC \033[0m");
-                    } else if (chessBoard.getBoardField(i, j).getFigure().getClass() == Pawn.class) {
-                        System.out.print("\033[3mp \033[0m");
-                    }
+                    drawFigure(chessBoard.getBoardField(i, j).getFigure());
                 }
             }
             System.out.println();
         }
         System.out.println();
+
+        System.out.print("Битые фигуры: ");
+        for (Figure figure : chessBoard.getDeadFigures()){
+            drawFigure(figure);
+        }
+        System.out.println();
+
+        for (Figure figure : chessBoard.getDeadFigures()){
+            if (figure.getClass() == King.class){
+                if (figure.getColor() == Color.WHITE) {
+                    System.out.println("Победа черных!");
+                } else {
+                    System.out.println("Победа белых!");
+                }
+                System.out.println();
+                gameIsEnded = true;
+                break;
+            }
+        }
+    }
+
+    private static void drawFigure(Figure figure){
+        if (figure.getColor() == Color.WHITE) {
+            if (figure.getClass() == Rook.class) {
+                System.out.print("R ");
+            } else if (figure.getClass() == Knight.class) {
+                System.out.print("N ");
+            } else if (figure.getClass() == Bishop.class) {
+                System.out.print("B ");
+            } else if (figure.getClass() == Vizier.class) {
+                System.out.print("V ");
+            } else if (figure.getClass() == Giraffe.class) {
+                System.out.print("G ");
+            } else if (figure.getClass() == King.class) {
+                System.out.print("K ");
+            } else if (figure.getClass() == Queen.class) {
+                System.out.print("Q ");
+            } else if (figure.getClass() == CombatMachine.class) {
+                System.out.print("C ");
+            } else if (figure.getClass() == Pawn.class) {
+                System.out.print("p ");
+            }
+        } else {
+            if (figure.getClass() == Rook.class) {
+                System.out.print("\033[3mR \033[0m");
+            } else if (figure.getClass() == Knight.class) {
+                System.out.print("\033[3mN \033[0m");
+            } else if (figure.getClass() == Bishop.class) {
+                System.out.print("\033[3mB \033[0m");
+            } else if (figure.getClass() == Vizier.class) {
+                System.out.print("\033[3mV \033[0m");
+            } else if (figure.getClass() == Giraffe.class) {
+                System.out.print("\033[3mG \033[0m");
+            } else if (figure.getClass() == King.class) {
+                System.out.print("\033[3mK \033[0m");
+            } else if (figure.getClass() == Queen.class) {
+                System.out.print("\033[3mQ \033[0m");
+            } else if (figure.getClass() == CombatMachine.class) {
+                System.out.print("\033[3mC \033[0m");
+            } else if (figure.getClass() == Pawn.class) {
+                System.out.print("\033[3mp \033[0m");
+            }
+        }
     }
 }

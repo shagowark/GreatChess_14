@@ -3,36 +3,17 @@ package ru.vsu.csf.greatChess.chessBoard;
 import ru.vsu.csf.greatChess.figures.*;
 
 import java.awt.*;
+import java.util.ArrayList;
+import java.util.List;
 
 public class ChessBoard {
     private final int SIZE_OF_BOARD = 10;
     private final ChessBoardField[][] board = new ChessBoardField[SIZE_OF_BOARD][SIZE_OF_BOARD];
-
+    private List<Figure> deadFigures = new ArrayList<>();
     public ChessBoard() {
         initializeChessBoard();
     }
 
-    public int getBoardFieldI(ChessBoardField field) throws Exception {
-        for (int i = 0; i < SIZE_OF_BOARD; i++){
-            for (int j = 0; j < SIZE_OF_BOARD; j++){
-                if (board[i][j] == field){
-                    return i;
-                }
-            }
-        }
-        throw new Exception("Нет такого поля");
-    }
-
-    public int getBoardFieldJ(ChessBoardField field) throws Exception {
-        for (int i = 0; i < SIZE_OF_BOARD; i++){
-            for (int j = 0; j < SIZE_OF_BOARD; j++){
-                if (board[i][j] == field){
-                    return j;
-                }
-            }
-        }
-        throw new Exception("Нет такого поля");
-    }
     public ChessBoardField getBoardField(int i, int j) {
         return board[i][j];
     }
@@ -42,12 +23,17 @@ public class ChessBoard {
         return SIZE_OF_BOARD;
     }
 
+    public void addDeadFigure(Figure figure){
+        deadFigures.add(figure);
+    }
 
-
+    public List<Figure> getDeadFigures(){
+        return deadFigures;
+    }
     private void initializeChessBoard(){
         for (int i = 0; i < SIZE_OF_BOARD; i++) {
             for (int j = 0; j < SIZE_OF_BOARD; j++) {
-                board[i][j] = new ChessBoardField(this);
+                board[i][j] = new ChessBoardField(this, i, j);
                 if ((i + j) % 2 == 0) {
                     board[i][j].setColor(Color.WHITE);
                 } else {

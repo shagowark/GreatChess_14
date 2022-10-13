@@ -8,9 +8,12 @@ public class ChessBoardField {
     private Color color;
     private Figure figureOnThisField;
     private final ChessBoard chessBoard;
+    private final Coordinates coordinates;
+    // coordinates
 
-    public ChessBoardField(ChessBoard chessBoard) {
+    public ChessBoardField(ChessBoard chessBoard, int i, int j) {
         this.chessBoard = chessBoard;
+        this.coordinates = new Coordinates(i, j);
     }
 
     public boolean hasFigure(){
@@ -36,4 +39,13 @@ public class ChessBoardField {
     public void setFigure(Figure figureOnThisField) {
         this.figureOnThisField = figureOnThisField;
     }
+
+    public int getI() {
+        return coordinates.getI();
+    }
+
+    public int getJ() {
+        return coordinates.getJ();
+    }
 }
+

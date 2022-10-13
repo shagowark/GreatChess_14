@@ -10,15 +10,15 @@ public class Queen extends Figure{
     }
 
     @Override
-    public boolean moveTo(ChessBoardField wantedField) throws Exception {
+    public boolean canMoveTo(ChessBoardField wantedField) throws Exception {
         if (position == wantedField) {
             return false;
         }
 
-        int currentI = chessBoard.getBoardFieldI(position);
-        int currentJ = chessBoard.getBoardFieldJ(position);
-        int wantedI = chessBoard.getBoardFieldI(wantedField);
-        int wantedJ = chessBoard.getBoardFieldJ(wantedField);
+        int currentI = position.getI();
+        int currentJ = position.getJ();
+        int wantedI = wantedField.getI();
+        int wantedJ = wantedField.getJ();
 
         if (currentI != wantedI){
             if (currentJ != wantedJ){ //rook pattern
@@ -42,19 +42,8 @@ public class Queen extends Figure{
             j += moveDirectionJ;
         }
         if (wantedField.hasFigure()) {
-            if (wantedField.getFigure().getColor() != this.color) {
-                wantedField.getFigure().position = null;
-                wantedField.setFigure(this);
-                this.position.setFigure(null);
-                this.position = wantedField;
-                return true;
-            } else {
-                return false;
-            }
+            return wantedField.getFigure().getColor() != this.color;
         } else{
-            wantedField.setFigure(this);
-            this.position.setFigure(null);
-            this.position = wantedField;
             return true;
         }
     }

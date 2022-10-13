@@ -11,17 +11,27 @@ public class Pawn extends Figure{
         super(color, position);
     }
 
-
     @Override
     public boolean moveTo(ChessBoardField wantedField) throws Exception {
+       if (super.moveTo(wantedField)){
+           if (wantedField.getI() == 0 || wantedField.getI() == chessBoard.getSIZE_OF_BOARD() - 1){
+               spawnQueen(wantedField);
+           }
+           return true;
+       } else return false;
+    }
+
+    @Override
+    public boolean canMoveTo(ChessBoardField wantedField) throws Exception {
         if (position == wantedField){
             return false;
         }
 
-        int currentI = chessBoard.getBoardFieldI(position);
-        int currentJ = chessBoard.getBoardFieldJ(position);
-        int wantedI = chessBoard.getBoardFieldI(wantedField);
-        int wantedJ = chessBoard.getBoardFieldJ(wantedField);
+        int currentI = position.getI();
+        int currentJ = position.getJ();
+        int wantedI = wantedField.getI();
+        int wantedJ = wantedField.getJ();
+
         if (Math.abs(wantedJ - currentJ) > 1){
             return false;
         }
@@ -35,41 +45,18 @@ public class Pawn extends Figure{
             }
         }
         if (currentJ == wantedJ){
-            if (wantedField.hasFigure()){
-                return false;
-            } else{
-                if (wantedI == 0 || wantedI == chessBoard.getSIZE_OF_BOARD() - 1){
-                    wantedField.setFigure(new Queen(color, wantedField));
-                    this.position.setFigure(null);
-                    this.position = null;
-                } else {
-                    wantedField.setFigure(this);
-                    this.position.setFigure(null);
-                    this.position = wantedField;
-                }
-                return true;
-            }
+            return !wantedField.hasFigure();
         } else {
             if (wantedField.hasFigure()) {
-                if (wantedField.getFigure().getColor() != this.color) {
-                    if (wantedI == 0 || wantedI == chessBoard.getSIZE_OF_BOARD() - 1){
-                        wantedField.getFigure().position = null;
-                        wantedField.setFigure(new Queen(color, wantedField));
-                        this.position.setFigure(null);
-                        this.position = null;
-                    } else {
-                        wantedField.getFigure().position = null;
-                        wantedField.setFigure(this);
-                        this.position.setFigure(null);
-                        this.position = wantedField;
-                    }
-                    return true;
-                } else {
-                    return false;
-                }
-            }else {
+                return wantedField.getFigure().getColor() != this.color;
+            } else {
                 return false;
             }
         }
+    }
+
+    private void spawnQueen(ChessBoardField wantedField){
+        wantedField.getFigure().position = null;
+        wantedField.setFigure(new Queen(color, wantedField));
     }
 }
