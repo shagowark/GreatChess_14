@@ -1,6 +1,9 @@
 package ru.vsu.csf.greatChess.figures;
 
+import ru.vsu.csf.greatChess.chessBoard.ChessBoard;
 import ru.vsu.csf.greatChess.chessBoard.ChessBoardField;
+import ru.vsu.csf.greatChess.chessBoard.GameOperator;
+import ru.vsu.csf.greatChess.chessBoard.GameStatus;
 
 import java.awt.*;
 
@@ -15,6 +18,8 @@ public class Bishop extends Figure {
             return false;
         }
 
+        ChessBoard chessBoard = position.getChessBoard();
+
         int currentI = position.getI();
         int currentJ = position.getJ();
         int wantedI = wantedField.getI();
@@ -23,6 +28,8 @@ public class Bishop extends Figure {
         if (Math.abs(currentI - wantedI) != Math.abs(currentJ - wantedJ)) {
             return false;
         }
+
+
 
         int moveDirectionI;
         int moveDirectionJ;
@@ -43,6 +50,5 @@ public class Bishop extends Figure {
             return true;
         }
     }
-
 
 }

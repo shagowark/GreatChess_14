@@ -1,6 +1,8 @@
 package ru.vsu.csf.greatChess.figures;
 
+import ru.vsu.csf.greatChess.chessBoard.ChessBoard;
 import ru.vsu.csf.greatChess.chessBoard.ChessBoardField;
+import ru.vsu.csf.greatChess.chessBoard.GameOperator;
 
 import java.awt.*;
 
@@ -14,6 +16,9 @@ public class CombatMachine extends Figure{
         if (position == wantedField) {
             return false;
         }
+
+
+        ChessBoard chessBoard = position.getChessBoard();
 
         int currentI = position.getI();
         int currentJ = position.getJ();

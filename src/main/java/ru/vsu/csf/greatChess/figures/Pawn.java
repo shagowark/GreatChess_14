@@ -2,6 +2,7 @@ package ru.vsu.csf.greatChess.figures;
 
 import ru.vsu.csf.greatChess.chessBoard.ChessBoard;
 import ru.vsu.csf.greatChess.chessBoard.ChessBoardField;
+import ru.vsu.csf.greatChess.chessBoard.GameOperator;
 
 import java.awt.*;
 import java.util.List;
@@ -13,6 +14,8 @@ public class Pawn extends Figure{
 
     @Override
     public boolean moveTo(ChessBoardField wantedField) throws Exception {
+        ChessBoard chessBoard = position.getChessBoard();
+
        if (super.moveTo(wantedField)){
            if (wantedField.getI() == 0 || wantedField.getI() == chessBoard.getSIZE_OF_BOARD() - 1){
                spawnQueen(wantedField);
@@ -26,6 +29,7 @@ public class Pawn extends Figure{
         if (position == wantedField){
             return false;
         }
+
 
         int currentI = position.getI();
         int currentJ = position.getJ();

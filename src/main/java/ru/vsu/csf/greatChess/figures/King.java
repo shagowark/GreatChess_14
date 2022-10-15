@@ -1,5 +1,6 @@
 package ru.vsu.csf.greatChess.figures;
 
+import ru.vsu.csf.greatChess.chessBoard.ChessBoard;
 import ru.vsu.csf.greatChess.chessBoard.GameOperator;
 import ru.vsu.csf.greatChess.chessBoard.ChessBoardField;
 
@@ -15,6 +16,7 @@ public class King extends Figure {
         if (position == wantedField) {
             return false;
         }
+
 
         int currentI = position.getI();
         int currentJ = position.getJ();

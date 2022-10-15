@@ -5,6 +5,7 @@ import ru.vsu.csf.greatChess.figures.King;
 
 import java.awt.*;
 import java.util.List;
+import java.util.Objects;
 
 public class GameOperator {
     /**
@@ -97,4 +98,27 @@ public class GameOperator {
 
         return false;
     }
+
+    /*
+    public static boolean kingIsUnderAttackIfFigureIsMoved(Figure figure) throws Exception {
+        ChessBoard chessBoard = figure.getPosition().getChessBoard();
+        List<Figure> figures = chessBoard.getAliveFigures();
+        Color enemyColor;
+        if (figure.getColor() == Color.WHITE){
+            enemyColor = Color.BLACK;
+        } else {
+            enemyColor = Color.WHITE;
+        }
+        figure.getPosition().setFigure(null);
+        Figure king = getKing(figures, figure.getColor());
+        if(fieldIsUnderAttack(king.getPosition(), enemyColor)){
+            figure.getPosition().setFigure(figure);
+            return true;
+        } else {
+            figure.getPosition().setFigure(figure);
+            return false;
+        }
+    }
+
+     */
 }

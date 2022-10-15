@@ -30,6 +30,16 @@ public class ConsoleGame {
                 continue;
             }
 
+
+
+            System.out.println("Введите номер клетки, куда хотите походить");
+            int wantedJ = scanner.next().charAt(0) - 97;
+            int wantedI = Math.abs(scanner.nextInt() - 10);
+            if (wantedI < 0 || wantedI > chessBoard.getSIZE_OF_BOARD() || wantedJ < 0 || wantedJ > chessBoard.getSIZE_OF_BOARD()){
+                System.out.println("Неверные координаты клетки!");
+                continue;
+            }
+            
             if (nowIsWhiteMove){
                 if (chessBoard.getBoardField(i, j).getFigure().getColor() != Color.WHITE){
                     System.out.println("Сейчас ходит другая сторона!");
@@ -46,17 +56,9 @@ public class ConsoleGame {
                 }
             }
 
-            System.out.println("Введите номер клетки, куда хотите походить");
-            int wantedJ = scanner.next().charAt(0) - 97;
-            int wantedI = Math.abs(scanner.nextInt() - 10);
-            if (wantedI < 0 || wantedI > chessBoard.getSIZE_OF_BOARD() || wantedJ < 0 || wantedJ > chessBoard.getSIZE_OF_BOARD()){
-                System.out.println("Неверные координаты клетки!");
-                continue;
-            }
-
             if(chessBoard.getBoardField(i, j).getFigure().moveTo(chessBoard.getBoardField(wantedI, wantedJ))){
                 drawChessBoard(chessBoard);
-                GameStatus status = GameOperator.checkGameStatus(chessBoard.getBoardField(i, j).getFigure());
+                GameStatus status = GameOperator.checkGameStatus(chessBoard.getBoardField(wantedI, wantedJ).getFigure());
                 if (status == GameStatus.BLACK_MATED){
                     gameIsEnded = true;
                     System.out.println("Победа белых!");
