@@ -45,4 +45,8 @@ abstract public class Figure {
         this.position.setFigure(null);
         this.position = wantedField;
     }
+
+    public ChessBoardField getPosition() {
+        return position;
+    }
 }

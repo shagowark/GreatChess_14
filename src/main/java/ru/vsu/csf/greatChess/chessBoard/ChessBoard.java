@@ -23,6 +23,20 @@ public class ChessBoard {
         return SIZE_OF_BOARD;
     }
 
+    public List<Figure> getAliveFigures(){
+        List<Figure> figures = new ArrayList<>();
+
+        for (ChessBoardField[] line : board){
+            for (ChessBoardField field : line){
+                if (field.hasFigure()){
+                    figures.add(field.getFigure());
+                }
+            }
+        }
+
+        return figures;
+    }
+
     public void addDeadFigure(Figure figure){
         deadFigures.add(figure);
     }

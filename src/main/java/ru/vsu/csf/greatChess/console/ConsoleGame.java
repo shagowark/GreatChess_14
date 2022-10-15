@@ -1,6 +1,8 @@
 package ru.vsu.csf.greatChess.console;
 
 import ru.vsu.csf.greatChess.chessBoard.ChessBoard;
+import ru.vsu.csf.greatChess.chessBoard.GameOperator;
+import ru.vsu.csf.greatChess.chessBoard.GameStatus;
 import ru.vsu.csf.greatChess.figures.*;
 
 import java.awt.*;
@@ -13,7 +15,7 @@ public class ConsoleGame {
         ChessBoard chessBoard = new ChessBoard();
         drawChessBoard(chessBoard);
         Scanner scanner = new Scanner(System.in);
-        //todo шах и мат, заграничные координаты
+
         while (!gameIsEnded){
             System.out.println("Введите номер клетки, на которой стоит фигура, которой хотите походить");
             int j = scanner.next().charAt(0) - 97;
@@ -54,6 +56,20 @@ public class ConsoleGame {
 
             if(chessBoard.getBoardField(i, j).getFigure().moveTo(chessBoard.getBoardField(wantedI, wantedJ))){
                 drawChessBoard(chessBoard);
+                GameStatus status = GameOperator.checkGameStatus(chessBoard.getBoardField(i, j).getFigure());
+                if (status == GameStatus.BLACK_MATED){
+                    gameIsEnded = true;
+                    System.out.println("Победа белых!");
+                    break;
+                } else if (status == GameStatus.WHITE_MATED) {
+                    gameIsEnded = true;
+                    System.out.println("Победа черных!");
+                    break;
+                } else if (status == GameStatus.BLACK_CHECKED) {
+                    System.out.println("Шах черным!");
+                }else if (status == GameStatus.WHITE_CHECKED) {
+                    System.out.println("Шах белым!");
+                }
             } else{
                 System.out.println("Невозможно сделать такой ход!");
             }
@@ -97,18 +113,6 @@ public class ConsoleGame {
         }
         System.out.println();
 
-        for (Figure figure : chessBoard.getDeadFigures()){
-            if (figure.getClass() == King.class){
-                if (figure.getColor() == Color.WHITE) {
-                    System.out.println("Победа черных!");
-                } else {
-                    System.out.println("Победа белых!");
-                }
-                System.out.println();
-                gameIsEnded = true;
-                break;
-            }
-        }
     }
 
     private static void drawFigure(Figure figure){
