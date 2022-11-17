@@ -2,10 +2,10 @@ package ru.vsu.csf.greatChess.figures;
 
 import ru.vsu.csf.greatChess.chessBoard.ChessBoard;
 import ru.vsu.csf.greatChess.chessBoard.ChessBoardField;
-import ru.vsu.csf.greatChess.chessBoard.GameOperator;
-import ru.vsu.csf.greatChess.chessBoard.GameStatus;
 
 import java.awt.*;
+import java.util.ArrayList;
+import java.util.List;
 
 public class Bishop extends Figure {
     public Bishop(Color color, ChessBoardField position) {
@@ -13,7 +13,7 @@ public class Bishop extends Figure {
     }
 
     @Override
-    public boolean canMoveTo(ChessBoardField wantedField) throws Exception {
+    public boolean canMoveTo(ChessBoardField wantedField){
         if (position == wantedField) {
             return false;
         }

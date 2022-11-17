@@ -1,7 +1,6 @@
 package ru.vsu.csf.greatChess.figures;
 
-import ru.vsu.csf.greatChess.chessBoard.ChessBoard;
-import ru.vsu.csf.greatChess.chessBoard.GameOperator;
+import ru.vsu.csf.greatChess.game.GameOperator;
 import ru.vsu.csf.greatChess.chessBoard.ChessBoardField;
 
 import java.awt.*;
@@ -12,7 +11,7 @@ public class King extends Figure {
     }
 
     @Override
-    public boolean canMoveTo(ChessBoardField wantedField) throws Exception {
+    public boolean canMoveTo(ChessBoardField wantedField){
         if (position == wantedField) {
             return false;
         }
@@ -34,7 +33,8 @@ public class King extends Figure {
             return false;
         }
 
-        if (GameOperator.fieldIsUnderAttack(wantedField, enemyColor)){
+        GameOperator gameOperator = new GameOperator(this.getPosition().getChessBoard());
+        if (gameOperator.fieldIsUnderAttack(wantedField, enemyColor)){
             return false;
         }
 

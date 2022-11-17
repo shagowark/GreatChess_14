@@ -11,7 +11,7 @@ public class Vizier extends Figure{
     }
 
     @Override
-    public boolean canMoveTo(ChessBoardField wantedField) throws Exception {
+    public boolean canMoveTo(ChessBoardField wantedField) {
         if (position == wantedField) {
             return false;
         }

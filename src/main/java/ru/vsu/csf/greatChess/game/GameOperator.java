@@ -1,13 +1,20 @@
-package ru.vsu.csf.greatChess.chessBoard;
+package ru.vsu.csf.greatChess.game;
 
+import ru.vsu.csf.greatChess.chessBoard.ChessBoard;
+import ru.vsu.csf.greatChess.chessBoard.ChessBoardField;
 import ru.vsu.csf.greatChess.figures.Figure;
 import ru.vsu.csf.greatChess.figures.King;
 
 import java.awt.*;
 import java.util.List;
-import java.util.Objects;
 
 public class GameOperator {
+    ChessBoard chessBoard;
+
+    public GameOperator(ChessBoard chessBoard) {
+        this.chessBoard = chessBoard;
+    }
+
     /**
      * Подразумевается, что метод вызывается после каждого хода, т.е. проверяет,
      * поставила ли мат или шах последняя ходившая фигура
@@ -15,12 +22,8 @@ public class GameOperator {
      * @param figure последняя ходившая фигура
      * @return
      */
-    public static GameStatus checkGameStatus(Figure figure) throws Exception {
-        ChessBoard chessBoard = figure.getPosition().getChessBoard();
+    public MoveStatus checkGameStatus(Figure figure) {
         List<Figure> figures = chessBoard.getAliveFigures();
-        if (getKing(figures, Color.WHITE) == null || getKing(figures, Color.BLACK) == null){
-            throw new Exception("Нет короля!");
-        }
 
         Figure king;
         if (figure.getColor() == Color.WHITE){
@@ -30,22 +33,16 @@ public class GameOperator {
         }
 
         if (!figure.canMoveTo(king.getPosition())){
-            return GameStatus.FREE_GAME;
+            return MoveStatus.CORRECT;
         } else {
             if (kingCanMoveSomewhere(king)){
                 if (king.getColor() == Color.WHITE){
-                    return GameStatus.WHITE_CHECKED;
-                } else return GameStatus.BLACK_CHECKED;
+                    return MoveStatus.WHITE_CHECKED;
+                } else return MoveStatus.BLACK_CHECKED; //todo проверка на закрыть другой фигурой, убить шахующую
             } else {
-                if (fieldIsUnderAttack(figure.getPosition(), king.getColor())){
-                    if (king.getColor() == Color.WHITE){
-                        return GameStatus.WHITE_CHECKED;
-                    } else return GameStatus.BLACK_CHECKED;
-                } else {
-                    if (king.getColor() == Color.WHITE){
-                        return GameStatus.WHITE_MATED;
-                    } else return GameStatus.BLACK_MATED;
-                }
+                if (king.getColor() == Color.WHITE){
+                    return MoveStatus.WHITE_MATED;
+                } else return MoveStatus.BLACK_MATED;
             }
         }
     }
@@ -57,8 +54,7 @@ public class GameOperator {
      * @return
      * @throws Exception
      */
-    public static boolean fieldIsUnderAttack(ChessBoardField field, Color color) throws Exception {
-        ChessBoard chessBoard = field.getChessBoard();
+    public boolean fieldIsUnderAttack(ChessBoardField field, Color color) { //todo возможно перекинуть в Game или ChessBoard, здесь оставить только работу с шахом/матом
         List<Figure> figures = chessBoard.getAliveFigures();
         for (Figure figure : figures) {
             if (figure.getColor() == color && figure.canMoveTo(field)) {
@@ -68,7 +64,7 @@ public class GameOperator {
         return false;
     }
 
-    private static Figure getKing(List<Figure> figures, Color color) {
+    private Figure getKing(List<Figure> figures, Color color) {
         for (Figure figure : figures) {
             if (figure.getClass() == King.class && figure.getColor() == color) {
                 return figure;
@@ -77,10 +73,9 @@ public class GameOperator {
         return null;
     }
 
-    private static boolean kingCanMoveSomewhere(Figure king) throws Exception {
+    private boolean kingCanMoveSomewhere(Figure king) {
         int currentI = king.getPosition().getI();
         int currentJ = king.getPosition().getJ();
-        ChessBoard chessBoard = king.getPosition().getChessBoard();
 
         for (int moveDirectionI = -1; moveDirectionI <= 1; moveDirectionI++){
             for (int moveDirectionJ = -1; moveDirectionJ <=1; moveDirectionJ++){
@@ -99,9 +94,8 @@ public class GameOperator {
         return false;
     }
 
-    /*
-    public static boolean kingIsUnderAttackIfFigureIsMoved(Figure figure) throws Exception {
-        ChessBoard chessBoard = figure.getPosition().getChessBoard();
+
+    public boolean kingIsUnderAttackIfFigureIsMoved(Figure figure) {
         List<Figure> figures = chessBoard.getAliveFigures();
         Color enemyColor;
         if (figure.getColor() == Color.WHITE){
@@ -120,5 +114,5 @@ public class GameOperator {
         }
     }
 
-     */
+
 }

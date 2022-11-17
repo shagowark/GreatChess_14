@@ -2,10 +2,8 @@ package ru.vsu.csf.greatChess.figures;
 
 import ru.vsu.csf.greatChess.chessBoard.ChessBoard;
 import ru.vsu.csf.greatChess.chessBoard.ChessBoardField;
-import ru.vsu.csf.greatChess.chessBoard.GameOperator;
 
 import java.awt.*;
-import java.util.List;
 
 public class Pawn extends Figure{
     public Pawn(Color color, ChessBoardField position) {
@@ -13,7 +11,7 @@ public class Pawn extends Figure{
     }
 
     @Override
-    public boolean moveTo(ChessBoardField wantedField) throws Exception {
+    public boolean moveTo(ChessBoardField wantedField)  {
         ChessBoard chessBoard = position.getChessBoard();
 
        if (super.moveTo(wantedField)){
@@ -25,7 +23,7 @@ public class Pawn extends Figure{
     }
 
     @Override
-    public boolean canMoveTo(ChessBoardField wantedField) throws Exception {
+    public boolean canMoveTo(ChessBoardField wantedField) {
         if (position == wantedField){
             return false;
         }

@@ -18,6 +18,10 @@ public class ChessBoard {
         return board[i][j];
     }
 
+    public ChessBoardField getBoardField(Coordinates coord){
+        return getBoardField(coord.getI(), coord.getJ());
+    }
+
 
     public int getSIZE_OF_BOARD() {
         return SIZE_OF_BOARD;

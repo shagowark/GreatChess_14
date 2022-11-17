@@ -20,8 +20,7 @@ abstract public class Figure {
         return color;
     }
 
-    // разделить на более мелкие, убитые фигуры.
-    public boolean moveTo(ChessBoardField wantedField) throws Exception{
+    public boolean moveTo(ChessBoardField wantedField){
         if (canMoveTo(wantedField)) {
             if (wantedField.hasFigure()) {
                     killOnField(wantedField);
@@ -33,7 +32,38 @@ abstract public class Figure {
         }
     }
 
-    public abstract boolean canMoveTo(ChessBoardField wantedField) throws Exception;
+    public abstract boolean canMoveTo(ChessBoardField wantedField);
+    public List<ChessBoardField> getReachableFields() {
+        List<ChessBoardField> reachable = new ArrayList<>();
+        ChessBoard chessBoard = position.getChessBoard();
+        for (int i = 0; i < chessBoard.getSIZE_OF_BOARD(); i++){
+            for (int j = 0; j < chessBoard.getSIZE_OF_BOARD(); j++){
+                if (canMoveTo(chessBoard.getBoardField(i, j))){
+                    if (!chessBoard.getBoardField(i, j).hasFigure()){
+                        reachable.add(chessBoard.getBoardField(i, j));
+                    }
+                }
+            }
+        }
+        return reachable;
+    }
+
+    public List<ChessBoardField> getKillableFields() {
+        List<ChessBoardField> killable = new ArrayList<>();
+        ChessBoard chessBoard = position.getChessBoard();
+        for (int i = 0; i < chessBoard.getSIZE_OF_BOARD(); i++){
+            for (int j = 0; j < chessBoard.getSIZE_OF_BOARD(); j++){
+                if (canMoveTo(chessBoard.getBoardField(i, j))){
+                    if (chessBoard.getBoardField(i, j).hasFigure()){
+                        if (chessBoard.getBoardField(i, j).getFigure().getColor() != this.color){
+                            killable.add(chessBoard.getBoardField(i, j));
+                        }
+                    }
+                }
+            }
+        }
+        return killable;
+    }
     protected void killOnField(ChessBoardField wantedField){
         ChessBoard chessBoard = position.getChessBoard();
         wantedField.getFigure().position = null;

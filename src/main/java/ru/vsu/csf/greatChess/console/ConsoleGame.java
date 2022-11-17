@@ -1,89 +1,78 @@
 package ru.vsu.csf.greatChess.console;
 
 import ru.vsu.csf.greatChess.chessBoard.ChessBoard;
-import ru.vsu.csf.greatChess.chessBoard.GameOperator;
-import ru.vsu.csf.greatChess.chessBoard.GameStatus;
+import ru.vsu.csf.greatChess.game.Game;
 import ru.vsu.csf.greatChess.figures.*;
 
 import java.awt.*;
 import java.util.Scanner;
 
 public class ConsoleGame {
-    private static boolean nowIsWhiteMove = true;
-    private static boolean gameIsEnded = false;
-    public static void startConsoleGame() throws Exception {
-        ChessBoard chessBoard = new ChessBoard();
-        drawChessBoard(chessBoard);
+    private Game game = new Game();
+
+    public void startConsoleGame() throws Exception {
+        drawChessBoard(game.getChessBoard());
         Scanner scanner = new Scanner(System.in);
 
-        while (!gameIsEnded){
+        while (!game.isGameEnded()) {
             System.out.println("Введите номер клетки, на которой стоит фигура, которой хотите походить");
             int j = scanner.next().charAt(0) - 97;
             int i = Math.abs(scanner.nextInt() - 10);
-            if (i < 0 || i > chessBoard.getSIZE_OF_BOARD() || j < 0 || j > chessBoard.getSIZE_OF_BOARD()){
-                System.out.println("Неверные координаты клетки!");
-                continue;
+
+            switch (game.tryChooseFigure(i, j)) {
+                case WRONG_COORD:
+                    System.out.println("Неверные координаты клетки!");
+                    continue;
+                case FIELD_EMPTY:
+                    System.out.println("Это пустая клетка!");
+                    continue;
+                case WRONG_COLOR:
+                    System.out.println("Ход другого игрока!");
+                    continue;
             }
-
-            if (!chessBoard.getBoardField(i, j).hasFigure()){
-                System.out.println("Это пустая клетка!");
-                continue;
-            }
-
-
 
             System.out.println("Введите номер клетки, куда хотите походить");
             int wantedJ = scanner.next().charAt(0) - 97;
             int wantedI = Math.abs(scanner.nextInt() - 10);
-            if (wantedI < 0 || wantedI > chessBoard.getSIZE_OF_BOARD() || wantedJ < 0 || wantedJ > chessBoard.getSIZE_OF_BOARD()){
-                System.out.println("Неверные координаты клетки!");
-                continue;
-            }
-            
-            if (nowIsWhiteMove){
-                if (chessBoard.getBoardField(i, j).getFigure().getColor() != Color.WHITE){
-                    System.out.println("Сейчас ходит другая сторона!");
+
+            switch (game.tryMoveFigureTo(wantedI, wantedJ)) {
+                case WRONG_COORD:
+                    System.out.println("Неверные координаты клетки!");
                     continue;
-                } else {
-                    nowIsWhiteMove = !nowIsWhiteMove;
-                }
-            } else {
-                if (chessBoard.getBoardField(i, j).getFigure().getColor() != Color.BLACK){
-                    System.out.println("Сейчас ходит другая сторона!");
+                case WRONG_COLOR:
+                    System.out.println("Ход другого игрока");
                     continue;
-                } else{
-                    nowIsWhiteMove = !nowIsWhiteMove;
-                }
+                case CANT_MOVE:
+                    System.out.println("Нельзя сделать такой ход!");
+                    continue;
+                case KING_UNDER_ATTACK:
+                    System.out.println("Нельзя сделать такой ход, шах королю!");
+                    continue;
+                case CORRECT:
+                    continue;
+                case WHITE_CHECKED:
+                    System.out.println("Шах белым!");
+                case WHITE_MATED:
+                    System.out.println("Победа черных!");
+                case BLACK_CHECKED:
+                    System.out.println("Шах черным!");
+                case BLACK_MATED:
+                    System.out.println("Победа белых!");
             }
 
-            if(chessBoard.getBoardField(i, j).getFigure().moveTo(chessBoard.getBoardField(wantedI, wantedJ))){
-                drawChessBoard(chessBoard);
-                GameStatus status = GameOperator.checkGameStatus(chessBoard.getBoardField(wantedI, wantedJ).getFigure());
-                if (status == GameStatus.BLACK_MATED){
-                    gameIsEnded = true;
-                    System.out.println("Победа белых!");
-                    break;
-                } else if (status == GameStatus.WHITE_MATED) {
-                    gameIsEnded = true;
-                    System.out.println("Победа черных!");
-                    break;
-                } else if (status == GameStatus.BLACK_CHECKED) {
-                    System.out.println("Шах черным!");
-                }else if (status == GameStatus.WHITE_CHECKED) {
-                    System.out.println("Шах белым!");
-                }
-            } else{
-                System.out.println("Невозможно сделать такой ход!");
-            }
+            drawChessBoard(game.getChessBoard());
+
+
             System.out.println();
         }
+
     }
 
     private static void drawChessBoard(ChessBoard chessBoard) {
         for (int i = -1; i < chessBoard.getSIZE_OF_BOARD(); i++) {
-            if (i == -1){
+            if (i == -1) {
                 System.out.print("   ");
-                for (char k = 'a'; k <= 'j'; k++){
+                for (char k = 'a'; k <= 'j'; k++) {
                     System.out.print(k + " ");
                 }
                 System.out.println();
@@ -91,8 +80,8 @@ public class ConsoleGame {
             }
 
             for (int j = -1; j < chessBoard.getSIZE_OF_BOARD(); j++) {
-                if (j == -1){
-                    if (Math.abs(i - 10) != 10){
+                if (j == -1) {
+                    if (Math.abs(i - 10) != 10) {
                         System.out.print(" ");
                     }
                     System.out.print(Math.abs(i - 10) + " ");
@@ -110,14 +99,14 @@ public class ConsoleGame {
         System.out.println();
 
         System.out.print("Битые фигуры: ");
-        for (Figure figure : chessBoard.getDeadFigures()){
+        for (Figure figure : chessBoard.getDeadFigures()) {
             drawFigure(figure);
         }
         System.out.println();
 
     }
 
-    private static void drawFigure(Figure figure){
+    private static void drawFigure(Figure figure) {
         if (figure.getColor() == Color.WHITE) {
             if (figure.getClass() == Rook.class) {
                 System.out.print("R ");
