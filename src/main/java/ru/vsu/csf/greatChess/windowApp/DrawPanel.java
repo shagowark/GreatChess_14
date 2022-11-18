@@ -34,13 +34,16 @@ public class DrawPanel extends JPanel implements MouseListener {
         if (game.isGameEnded()){
             JOptionPane.showMessageDialog(this, "End of game!");
         }
+        g.setColor(Color.WHITE);
+        g.fillRect(0, 0, getWidth(), getHeight());
         for (int i = 0; i < chessBoard.getSIZE_OF_BOARD(); i++) {
             for (int j = 0; j < chessBoard.getSIZE_OF_BOARD(); j++) {
                 Color color;
                 if ((i + j) % 2 == 0) {
-                    color = new Color(255, 206, 158);
+                    color = new Color(240,217,181);
+
                 } else {
-                    color = new Color(209, 139, 71);
+                    color = new Color(181,136,99);
                 }
                 g.setColor(color);
                 g.fillRect((j + 1) * CELL_SIZE, (i + 1) * CELL_SIZE, CELL_SIZE, CELL_SIZE);
@@ -49,14 +52,14 @@ public class DrawPanel extends JPanel implements MouseListener {
                 if (reachable != null) {
                     if (reachable.contains(chessBoard.getBoardField(i, j))) {
                         g.setColor(Color.YELLOW);
-                        g.drawRect((j + 1) * CELL_SIZE, (i + 1) * CELL_SIZE, CELL_SIZE, CELL_SIZE);
+                        g.fillRect((j + 1) * CELL_SIZE + CELL_SIZE/4, (i + 1) * CELL_SIZE+ CELL_SIZE/4, CELL_SIZE/2, CELL_SIZE/2);
                     }
                 }
 
                 if (killable != null) {
                     if (killable.contains(chessBoard.getBoardField(i, j))) {
                         g.setColor(Color.RED);
-                        g.drawRect((j + 1) * CELL_SIZE, (i + 1) * CELL_SIZE, CELL_SIZE, CELL_SIZE);
+                        g.fillRect((j + 1) * CELL_SIZE, (i + 1) * CELL_SIZE, CELL_SIZE, CELL_SIZE);
                     }
                 }
 

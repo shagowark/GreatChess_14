@@ -26,21 +26,40 @@ public class GameOperator {
         List<Figure> figures = chessBoard.getAliveFigures();
 
         Figure king;
-        if (figure.getColor() == Color.WHITE){
+        if (figure.getColor() == Color.WHITE) {
             king = getKing(figures, Color.BLACK);
         } else {
             king = getKing(figures, Color.WHITE);
         }
 
-        if (!figure.canMoveTo(king.getPosition())){
+        if (!figure.canMoveTo(king.getPosition())) {
             return MoveStatus.CORRECT;
         } else {
-            if (kingCanMoveSomewhere(king)){
-                if (king.getColor() == Color.WHITE){
+            if (kingCanMoveSomewhere(king)) {
+                if (king.getColor() == Color.WHITE) {
                     return MoveStatus.WHITE_CHECKED;
-                } else return MoveStatus.BLACK_CHECKED; //todo проверка на закрыть другой фигурой, убить шахующую
+                } else return MoveStatus.BLACK_CHECKED;
             } else {
-                if (king.getColor() == Color.WHITE){
+                for (Figure someFigure : chessBoard.getAliveFigures()) {
+                    if (someFigure.getColor() != king.getColor()){
+                        continue;
+                    }
+                    for (ChessBoardField field : someFigure.getReachableFields()) {
+                        if (!kingIsUnderAttackIfFigureIsMovedTo(someFigure, field)) {
+                            if (king.getColor() == Color.WHITE) {
+                                return MoveStatus.WHITE_CHECKED;
+                            } else return MoveStatus.BLACK_CHECKED;
+                        }
+                    }
+                    for (ChessBoardField field : someFigure.getKillableFields()) {
+                        if (!kingIsUnderAttackIfFigureIsMovedTo(someFigure, field)) {
+                            if (king.getColor() == Color.WHITE) {
+                                return MoveStatus.WHITE_CHECKED;
+                            } else return MoveStatus.BLACK_CHECKED;
+                        }
+                    }
+                }
+                if (king.getColor() == Color.WHITE) {
                     return MoveStatus.WHITE_MATED;
                 } else return MoveStatus.BLACK_MATED;
             }
@@ -48,15 +67,13 @@ public class GameOperator {
     }
 
     /**
-     *
      * @param field
      * @param color цвет фигур, атакующих поле
      * @return
      * @throws Exception
      */
     public boolean fieldIsUnderAttack(ChessBoardField field, Color color) { //todo возможно перекинуть в Game или ChessBoard, здесь оставить только работу с шахом/матом
-        List<Figure> figures = chessBoard.getAliveFigures();
-        for (Figure figure : figures) {
+        for (Figure figure : chessBoard.getAliveFigures()) {
             if (figure.getColor() == color && figure.canMoveTo(field)) {
                 return true;
             }
@@ -77,14 +94,14 @@ public class GameOperator {
         int currentI = king.getPosition().getI();
         int currentJ = king.getPosition().getJ();
 
-        for (int moveDirectionI = -1; moveDirectionI <= 1; moveDirectionI++){
-            for (int moveDirectionJ = -1; moveDirectionJ <=1; moveDirectionJ++){
+        for (int moveDirectionI = -1; moveDirectionI <= 1; moveDirectionI++) {
+            for (int moveDirectionJ = -1; moveDirectionJ <= 1; moveDirectionJ++) {
                 int wantedI = currentI + moveDirectionI;
                 int wantedJ = currentJ + moveDirectionJ;
                 if (wantedI >= 0 && wantedI < chessBoard.getSIZE_OF_BOARD()
                         && wantedJ >= 0 && wantedJ < chessBoard.getSIZE_OF_BOARD()) {
 
-                    if (king.canMoveTo(chessBoard.getBoardField(wantedI, wantedJ))){
+                    if (king.canMoveTo(chessBoard.getBoardField(wantedI, wantedJ))) {
                         return true;
                     }
                 }
@@ -94,22 +111,42 @@ public class GameOperator {
         return false;
     }
 
-
-    public boolean kingIsUnderAttackIfFigureIsMoved(Figure figure) {
-        List<Figure> figures = chessBoard.getAliveFigures();
+    // подразумевается, что передается клетка, куда фигура может походить (уже проверена)
+    public boolean kingIsUnderAttackIfFigureIsMovedTo(Figure figure, ChessBoardField wantedField) {
         Color enemyColor;
-        if (figure.getColor() == Color.WHITE){
+        if (figure.getColor() == Color.WHITE) {
             enemyColor = Color.BLACK;
         } else {
             enemyColor = Color.WHITE;
         }
+        if (figure.getClass() == King.class){
+            return !figure.canMoveTo(wantedField);
+        }
+
+        Figure king = getKing(chessBoard.getAliveFigures(), figure.getColor());
+
+        ChessBoardField startPosition = figure.getPosition();
         figure.getPosition().setFigure(null);
-        Figure king = getKing(figures, figure.getColor());
-        if(fieldIsUnderAttack(king.getPosition(), enemyColor)){
-            figure.getPosition().setFigure(figure);
+
+        Figure prevFigure = null;
+        if (wantedField.hasFigure()) {
+            prevFigure = wantedField.getFigure();
+        }
+        wantedField.setFigure(figure);
+
+        if (fieldIsUnderAttack(king.getPosition(), enemyColor)) {
+            if (prevFigure != null) {
+                wantedField.setFigure(prevFigure);
+            }
+            wantedField.setFigure(null);
+            startPosition.setFigure(figure);
             return true;
         } else {
-            figure.getPosition().setFigure(figure);
+            if (prevFigure != null) {
+                wantedField.setFigure(prevFigure);
+            }
+            wantedField.setFigure(null);
+            startPosition.setFigure(figure);
             return false;
         }
     }

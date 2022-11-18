@@ -2,7 +2,7 @@ package ru.vsu.csf.greatChess.game;
 
 import ru.vsu.csf.greatChess.chessBoard.ChessBoard;
 import ru.vsu.csf.greatChess.chessBoard.Coordinates;
-import ru.vsu.csf.greatChess.figures.Figure;
+import ru.vsu.csf.greatChess.figures.*;
 
 import java.awt.*;
 
@@ -14,7 +14,7 @@ public class Game {
     private Figure currentFigure = null;
 
     public ChessBoard getChessBoard() {
-        return chessBoard; //todo создавать новую chessBoard, чтобы никто кроме Game не мог менять
+        return chessBoard;
     }
 
     public boolean isGameEnded() {
@@ -70,12 +70,13 @@ public class Game {
         if (!coordinatesAreRight(i, j)){
             return MoveStatus.WRONG_COORD;
         }
-        if (gameOperator.kingIsUnderAttackIfFigureIsMoved(currentFigure)){
-            return MoveStatus.KING_UNDER_ATTACK;
-        }
-        if (!currentFigure.moveTo(chessBoard.getBoardField(i, j))){
+        if (!currentFigure.canMoveTo(chessBoard.getBoardField(i, j))){
             return MoveStatus.CANT_MOVE;
         }
+        if (gameOperator.kingIsUnderAttackIfFigureIsMovedTo(currentFigure, chessBoard.getBoardField(i, j))){
+            return MoveStatus.KING_UNDER_ATTACK;
+        }
+        currentFigure.moveTo(chessBoard.getBoardField(i, j)); // todo не бьют пешки??
         MoveStatus status = gameOperator.checkGameStatus(currentFigure);
         if (status == MoveStatus.WHITE_MATED || status == MoveStatus.BLACK_MATED){
             gameIsEnded = true;

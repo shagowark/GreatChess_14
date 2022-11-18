@@ -68,6 +68,7 @@ abstract public class Figure {
         ChessBoard chessBoard = position.getChessBoard();
         wantedField.getFigure().position = null;
         chessBoard.addDeadFigure(wantedField.getFigure());
+        wantedField.setFigure(null);
     }
     protected void setOnField(ChessBoardField wantedField){
         wantedField.setFigure(this);
