@@ -8,10 +8,10 @@ import ru.vsu.csf.greatChess.figures.King;
 import java.awt.*;
 import java.util.List;
 
-public class GameOperator {
+public class CheckMateOperator {
     ChessBoard chessBoard;
 
-    public GameOperator(ChessBoard chessBoard) {
+    public CheckMateOperator(ChessBoard chessBoard) {
         this.chessBoard = chessBoard;
     }
 
@@ -66,20 +66,6 @@ public class GameOperator {
         }
     }
 
-    /**
-     * @param field
-     * @param color цвет фигур, атакующих поле
-     * @return
-     * @throws Exception
-     */
-    public boolean fieldIsUnderAttack(ChessBoardField field, Color color) { //todo возможно перекинуть в Game или ChessBoard, здесь оставить только работу с шахом/матом
-        for (Figure figure : chessBoard.getAliveFigures()) {
-            if (figure.getColor() == color && figure.canMoveTo(field)) {
-                return true;
-            }
-        }
-        return false;
-    }
 
     private Figure getKing(List<Figure> figures, Color color) {
         for (Figure figure : figures) {
@@ -144,12 +130,27 @@ public class GameOperator {
         } else {
             if (prevFigure != null) {
                 wantedField.setFigure(prevFigure);
+            } else {
+                wantedField.setFigure(null);
             }
-            wantedField.setFigure(null);
             startPosition.setFigure(figure);
             return false;
         }
     }
 
+    /**
+     * @param field
+     * @param color цвет фигур, атакующих поле
+     * @return
+     * @throws Exception
+     */
+    public boolean fieldIsUnderAttack(ChessBoardField field, Color color) { 
+        for (Figure figure : chessBoard.getAliveFigures()) {
+            if (figure.getColor() == color && figure.canMoveTo(field)) {
+                return true;
+            }
+        }
+        return false;
+    }
 
 }

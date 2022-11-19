@@ -1,6 +1,7 @@
 package ru.vsu.csf.greatChess.chessBoard;
 
 import ru.vsu.csf.greatChess.figures.*;
+import ru.vsu.csf.greatChess.game.Game;
 
 import java.awt.*;
 import java.util.ArrayList;
@@ -10,7 +11,9 @@ public class ChessBoard {
     private final int SIZE_OF_BOARD = 10;
     private final ChessBoardField[][] board = new ChessBoardField[SIZE_OF_BOARD][SIZE_OF_BOARD];
     private List<Figure> deadFigures = new ArrayList<>();
-    public ChessBoard() {
+    private Game game;
+    public ChessBoard(Game game) {
+        this.game = game;
         initializeChessBoard();
     }
 
@@ -25,6 +28,10 @@ public class ChessBoard {
 
     public int getSIZE_OF_BOARD() {
         return SIZE_OF_BOARD;
+    }
+
+    public Game getGame() {
+        return game;
     }
 
     public List<Figure> getAliveFigures(){

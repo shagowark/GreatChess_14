@@ -1,14 +1,15 @@
 package ru.vsu.csf.greatChess.game;
 
 import ru.vsu.csf.greatChess.chessBoard.ChessBoard;
+import ru.vsu.csf.greatChess.chessBoard.ChessBoardField;
 import ru.vsu.csf.greatChess.chessBoard.Coordinates;
 import ru.vsu.csf.greatChess.figures.*;
 
 import java.awt.*;
 
 public class Game {
-    private ChessBoard chessBoard = new ChessBoard();
-    private GameOperator gameOperator = new GameOperator(chessBoard);
+    private ChessBoard chessBoard = new ChessBoard(this);
+    private CheckMateOperator checkMateOperator = new CheckMateOperator(chessBoard);
     private boolean isWhiteMove = true;
     private boolean gameIsEnded = false;
     private Figure currentFigure = null;
@@ -73,11 +74,12 @@ public class Game {
         if (!currentFigure.canMoveTo(chessBoard.getBoardField(i, j))){
             return MoveStatus.CANT_MOVE;
         }
-        if (gameOperator.kingIsUnderAttackIfFigureIsMovedTo(currentFigure, chessBoard.getBoardField(i, j))){
+        if (checkMateOperator.kingIsUnderAttackIfFigureIsMovedTo(currentFigure, chessBoard.getBoardField(i, j))){
             return MoveStatus.KING_UNDER_ATTACK;
         }
-        currentFigure.moveTo(chessBoard.getBoardField(i, j)); // todo не бьют пешки??
-        MoveStatus status = gameOperator.checkGameStatus(currentFigure);
+        currentFigure.moveTo(chessBoard.getBoardField(i, j));
+        currentFigure = chessBoard.getBoardField(i, j).getFigure(); // на случай, если пешка превратилась в ферзя
+        MoveStatus status = checkMateOperator.checkGameStatus(currentFigure);
         if (status == MoveStatus.WHITE_MATED || status == MoveStatus.BLACK_MATED){
             gameIsEnded = true;
         }

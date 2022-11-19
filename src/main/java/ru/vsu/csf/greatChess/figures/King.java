@@ -1,12 +1,9 @@
 package ru.vsu.csf.greatChess.figures;
 
-import ru.vsu.csf.greatChess.chessBoard.ChessBoard;
-import ru.vsu.csf.greatChess.game.GameOperator;
+import ru.vsu.csf.greatChess.game.CheckMateOperator;
 import ru.vsu.csf.greatChess.chessBoard.ChessBoardField;
 
 import java.awt.*;
-import java.util.ArrayList;
-import java.util.List;
 
 public class King extends Figure {
     public King(Color color, ChessBoardField position) {
@@ -36,14 +33,14 @@ public class King extends Figure {
             return false;
         }
 
-        GameOperator gameOperator = new GameOperator(this.getPosition().getChessBoard());
+        CheckMateOperator checkMateOperator = new CheckMateOperator(this.getPosition().getChessBoard());
         Figure prevFigure = null;
         if (wantedField.hasFigure()){
             prevFigure = wantedField.getFigure();
         }
         position.setFigure(null);
         wantedField.setFigure(null);
-        if (gameOperator.fieldIsUnderAttack(wantedField, enemyColor)) {
+        if (checkMateOperator.fieldIsUnderAttack(wantedField, enemyColor)) {
             if (prevFigure != null){
                 wantedField.setFigure(prevFigure);
             }
