@@ -4,6 +4,7 @@ import ru.vsu.csf.greatChess.chessBoard.ChessBoard;
 import ru.vsu.csf.greatChess.chessBoard.ChessBoardField;
 import ru.vsu.csf.greatChess.figures.Figure;
 import ru.vsu.csf.greatChess.figures.King;
+import ru.vsu.csf.greatChess.figures.Pawn;
 
 import java.awt.*;
 import java.util.List;
@@ -41,7 +42,7 @@ public class CheckMateOperator {
                 } else return MoveStatus.BLACK_CHECKED;
             } else {
                 for (Figure someFigure : chessBoard.getAliveFigures()) {
-                    if (someFigure.getColor() != king.getColor()){
+                    if (someFigure.getColor() != king.getColor()) {
                         continue;
                     }
                     for (ChessBoardField field : someFigure.getReachableFields()) {
@@ -105,7 +106,7 @@ public class CheckMateOperator {
         } else {
             enemyColor = Color.WHITE;
         }
-        if (figure.getClass() == King.class){
+        if (figure.getClass() == King.class) {
             return !figure.canMoveTo(wantedField);
         }
 
@@ -144,11 +145,30 @@ public class CheckMateOperator {
      * @return
      * @throws Exception
      */
-    public boolean fieldIsUnderAttack(ChessBoardField field, Color color) { 
+    public boolean fieldIsUnderAttack(ChessBoardField field, Color color) {
+        boolean changed = false;
+        if (!field.hasFigure()) {
+            changed = true;
+            Color c;
+            if (color == Color.WHITE) {
+                c = Color.BLACK;
+            } else {
+                c = Color.WHITE;
+            }
+            field.setFigure(new Pawn(c, field)); // добавим фигуру на поле, чтобы правильно работала проверка canMoveTo для пешек
+        }
+
         for (Figure figure : chessBoard.getAliveFigures()) {
             if (figure.getColor() == color && figure.canMoveTo(field)) {
+                if (changed) {
+                    field.setFigure(null);
+                }
+
                 return true;
             }
+        }
+        if (changed) {
+            field.setFigure(null);
         }
         return false;
     }
