@@ -122,18 +122,11 @@ public class CheckMateOperator {
         wantedField.setFigure(figure);
 
         if (fieldIsUnderAttack(king.getPosition(), enemyColor)) {
-            if (prevFigure != null) {
-                wantedField.setFigure(prevFigure);
-            }
-            wantedField.setFigure(null);
+            wantedField.setFigure(prevFigure);
             startPosition.setFigure(figure);
             return true;
         } else {
-            if (prevFigure != null) {
-                wantedField.setFigure(prevFigure);
-            } else {
-                wantedField.setFigure(null);
-            }
+            wantedField.setFigure(prevFigure);
             startPosition.setFigure(figure);
             return false;
         }

@@ -67,7 +67,7 @@ public class Game {
     }
 
 
-    public MoveStatus tryMoveFigureTo(int i, int j){
+    public MoveStatus tryMoveFigureTo(int i, int j){ // передавать сразу field, проверку для координат
         if (!coordinatesAreRight(i, j)){
             return MoveStatus.WRONG_COORD;
         }

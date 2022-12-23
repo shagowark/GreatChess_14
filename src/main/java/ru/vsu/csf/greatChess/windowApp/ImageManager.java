@@ -13,7 +13,7 @@ public class ImageManager {
         if(figure.getColor() == Color.WHITE){
             name.append("White");
         } else {
-            name.append("Black");
+            name.append("Black"); //todo getResoursesStream - посмотреть
         }
         name.append(getName(figure));
         name.append(".png");

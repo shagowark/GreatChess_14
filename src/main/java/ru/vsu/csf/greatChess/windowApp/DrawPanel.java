@@ -13,7 +13,7 @@ import java.util.List;
 public class DrawPanel extends JPanel implements MouseListener {
     private static final int FIELD_SIZE = 50;
     private Game game;
-    private List<ChessBoardField> reachable = null;
+    private List<ChessBoardField> reachable = null; // todo пустой список
     private List<ChessBoardField> killable = null;
     private ChessBoardField chosenField = null;
 
@@ -87,7 +87,9 @@ public class DrawPanel extends JPanel implements MouseListener {
             j--;
         }
     }
-
+// отдельный класс mouseListener extend MouseAdapter передавать Game или доску или панельку. Преобразует
+    // координаты клика в координаты доски.
+    // Отрисовка клеток (с/без фигурой) в отдельный класс FieldRenderer
     @Override
     public void mouseClicked(MouseEvent e) {
         int j = e.getX() / FIELD_SIZE - 1;
@@ -102,7 +104,7 @@ public class DrawPanel extends JPanel implements MouseListener {
             if (chosenField == null) {
                 switch (game.tryChooseFigure(i, j)) {
                     case CORRECT -> {
-                        chosenField = currentField;
+                        chosenField = currentField; // todo data-класс
                         reachable = currentField.getFigure().getReachableFields();
                         killable = currentField.getFigure().getKillableFields();
                         repaint();

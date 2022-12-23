@@ -8,10 +8,11 @@ import javax.swing.*;
 public class Main {
     public static void main(String[] args) throws Exception {
 
-        if (args[0].equals("-console")) {
+
+        if ("-console".equals(args[0])) {
             ConsoleGame consoleGame = new ConsoleGame();
             consoleGame.startConsoleGame();
-        } else if (args[0].equals("-window")) {
+        } else if ("-window".equals(args[0])) {
             WindowGame wg = new WindowGame();
             wg.setDefaultCloseOperation(WindowConstants.DISPOSE_ON_CLOSE);
             wg.setSize(650, 650);
