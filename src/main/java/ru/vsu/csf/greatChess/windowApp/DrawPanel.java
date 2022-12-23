@@ -6,20 +6,20 @@ import ru.vsu.csf.greatChess.game.Game;
 
 import javax.swing.*;
 import java.awt.*;
-import java.awt.event.MouseEvent;
-import java.awt.event.MouseListener;
+import java.awt.event.MouseAdapter;
 import java.util.List;
 
-public class DrawPanel extends JPanel implements MouseListener {
+public class DrawPanel extends JPanel {
     private static final int FIELD_SIZE = 50;
     private Game game;
     private List<ChessBoardField> reachable = null; // todo пустой список
     private List<ChessBoardField> killable = null;
-    private ChessBoardField chosenField = null;
+    private ChessBoardField currentField = null;
+    private MouseAdapter mouseListener = new ClickListener(this);
 
     public DrawPanel(Game game) {
         this.game = game;
-        this.addMouseListener(this);
+        this.addMouseListener(mouseListener);
     }
 
     @Override
@@ -30,7 +30,7 @@ public class DrawPanel extends JPanel implements MouseListener {
 
     private void paintChessBoard(Graphics2D g) {
         ChessBoard chessBoard = game.getChessBoard();
-        if (game.isGameEnded()){
+        if (game.isGameEnded()) {
             JOptionPane.showMessageDialog(this, "End of game!");
         }
         g.setColor(Color.WHITE);
@@ -39,10 +39,10 @@ public class DrawPanel extends JPanel implements MouseListener {
             for (int j = 0; j < chessBoard.getSIZE_OF_BOARD(); j++) {
                 Color color;
                 if (chessBoard.getBoardField(i, j).getColor() == Color.WHITE) {
-                    color = new Color(240,217,181);
+                    color = new Color(240, 217, 181);
 
                 } else {
-                    color = new Color(181,136,99);
+                    color = new Color(181, 136, 99);
                 }
                 g.setColor(color);
                 g.fillRect((j + 1) * FIELD_SIZE, (i + 1) * FIELD_SIZE, FIELD_SIZE, FIELD_SIZE);
@@ -51,7 +51,7 @@ public class DrawPanel extends JPanel implements MouseListener {
                 if (reachable != null) {
                     if (reachable.contains(chessBoard.getBoardField(i, j))) {
                         g.setColor(Color.YELLOW);
-                        g.fillRect((j + 1) * FIELD_SIZE + FIELD_SIZE /4, (i + 1) * FIELD_SIZE + FIELD_SIZE /4, FIELD_SIZE /2, FIELD_SIZE /2);
+                        g.fillRect((j + 1) * FIELD_SIZE + FIELD_SIZE / 4, (i + 1) * FIELD_SIZE + FIELD_SIZE / 4, FIELD_SIZE / 2, FIELD_SIZE / 2);
                     }
                 }
 
@@ -62,7 +62,7 @@ public class DrawPanel extends JPanel implements MouseListener {
                     }
                 }
 
-                if (chosenField == chessBoard.getBoardField(i, j)) {
+                if (currentField == chessBoard.getBoardField(i, j)) {
                     g.setColor(Color.ORANGE);
                     g.drawRect((j + 1) * FIELD_SIZE, (i + 1) * FIELD_SIZE, FIELD_SIZE, FIELD_SIZE);
                 }
@@ -87,85 +87,44 @@ public class DrawPanel extends JPanel implements MouseListener {
             j--;
         }
     }
-// отдельный класс mouseListener extend MouseAdapter передавать Game или доску или панельку. Преобразует
+
+    public MouseAdapter getMouseListener() {
+        return mouseListener;
+    }
+
+    public Game getGame() {
+        return game;
+    }
+
+    public List<ChessBoardField> getReachable() {
+        return reachable;
+    }
+
+    public List<ChessBoardField> getKillable() {
+        return killable;
+    }
+
+    public ChessBoardField getCurrentField() {
+        return currentField;
+    }
+
+    public int getFieldSize(){
+        return FIELD_SIZE;
+    }
+
+    public void setCurrentField(ChessBoardField currentField) {
+        this.currentField = currentField;
+    }
+
+    public void setKillable(List<ChessBoardField> killable) {
+        this.killable = killable;
+    }
+
+    public void setReachable(List<ChessBoardField> reachable) {
+        this.reachable = reachable;
+    }
+    // отдельный класс mouseListener extend MouseAdapter передавать Game или доску или панельку. Преобразует
     // координаты клика в координаты доски.
     // Отрисовка клеток (с/без фигурой) в отдельный класс FieldRenderer
-    @Override
-    public void mouseClicked(MouseEvent e) {
-        int j = e.getX() / FIELD_SIZE - 1;
-        int i = e.getY() / FIELD_SIZE - 1;
-        if (!game.coordinatesAreRight(i, j)){
-            chosenField = null;
-            reachable = null;
-            killable = null;
-            repaint();
-        } else {
-            ChessBoardField currentField = game.getChessBoard().getBoardField(i, j);
-            if (chosenField == null) {
-                switch (game.tryChooseFigure(i, j)) {
-                    case CORRECT -> {
-                        chosenField = currentField; // todo data-класс
-                        reachable = currentField.getFigure().getReachableFields();
-                        killable = currentField.getFigure().getKillableFields();
-                        repaint();
-                    }
-                    case FIELD_EMPTY -> {
-                        chosenField = null;
-                        reachable = null;
-                        killable = null;
-                        repaint();}
-                }
-            } else {
-                switch (game.tryMoveFigureTo(i, j)) {
-                    case KING_UNDER_ATTACK -> {
-                        chosenField = null;
-                        reachable = null;
-                        killable = null;
-                        JOptionPane.showMessageDialog(this, "King is checked!");
-                        repaint();
-                    }
-                    case WHITE_MATED -> {
-                        chosenField = null;
-                        reachable = null;
-                        killable = null;
-                        JOptionPane.showMessageDialog(this, "Black win!");
-                        repaint();
-                    }
-                    case BLACK_MATED -> {
-                        chosenField = null;
-                        reachable = null;
-                        killable = null;
-                        JOptionPane.showMessageDialog(this, "White win!");
-                        repaint();
-                    }
-                    default -> {
-                        chosenField = null;
-                        reachable = null;
-                        killable = null;
-                        repaint();
-                    }
-                }
-            }
-        }
-    }
 
-    @Override
-    public void mousePressed(MouseEvent e) {
-
-    }
-
-    @Override
-    public void mouseReleased(MouseEvent e) {
-
-    }
-
-    @Override
-    public void mouseEntered(MouseEvent e) {
-
-    }
-
-    @Override
-    public void mouseExited(MouseEvent e) {
-
-    }
 }

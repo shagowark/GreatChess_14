@@ -23,7 +23,7 @@ public class CheckMateOperator {
      * @param figure последняя ходившая фигура
      * @return
      */
-    public MoveStatus checkGameStatus(Figure figure) {
+    public GameStatus checkGameStatus(Figure figure) {
         List<Figure> figures = chessBoard.getAliveFigures();
 
         Figure king;
@@ -34,12 +34,12 @@ public class CheckMateOperator {
         }
 
         if (!figure.canMoveTo(king.getPosition())) {
-            return MoveStatus.CORRECT;
+            return GameStatus.FIGURE_MOVED;
         } else {
             if (kingCanMoveSomewhere(king)) {
                 if (king.getColor() == Color.WHITE) {
-                    return MoveStatus.WHITE_CHECKED;
-                } else return MoveStatus.BLACK_CHECKED;
+                    return GameStatus.WHITE_CHECKED;
+                } else return GameStatus.BLACK_CHECKED;
             } else {
                 for (Figure someFigure : chessBoard.getAliveFigures()) {
                     if (someFigure.getColor() != king.getColor()) {
@@ -48,21 +48,21 @@ public class CheckMateOperator {
                     for (ChessBoardField field : someFigure.getReachableFields()) {
                         if (!kingIsUnderAttackIfFigureIsMovedTo(someFigure, field)) {
                             if (king.getColor() == Color.WHITE) {
-                                return MoveStatus.WHITE_CHECKED;
-                            } else return MoveStatus.BLACK_CHECKED;
+                                return GameStatus.WHITE_CHECKED;
+                            } else return GameStatus.BLACK_CHECKED;
                         }
                     }
                     for (ChessBoardField field : someFigure.getKillableFields()) {
                         if (!kingIsUnderAttackIfFigureIsMovedTo(someFigure, field)) {
                             if (king.getColor() == Color.WHITE) {
-                                return MoveStatus.WHITE_CHECKED;
-                            } else return MoveStatus.BLACK_CHECKED;
+                                return GameStatus.WHITE_CHECKED;
+                            } else return GameStatus.BLACK_CHECKED;
                         }
                     }
                 }
                 if (king.getColor() == Color.WHITE) {
-                    return MoveStatus.WHITE_MATED;
-                } else return MoveStatus.BLACK_MATED;
+                    return GameStatus.WHITE_MATED;
+                } else return GameStatus.BLACK_MATED;
             }
         }
     }

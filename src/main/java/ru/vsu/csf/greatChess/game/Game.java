@@ -1,7 +1,6 @@
 package ru.vsu.csf.greatChess.game;
 
 import ru.vsu.csf.greatChess.chessBoard.ChessBoard;
-import ru.vsu.csf.greatChess.chessBoard.ChessBoardField;
 import ru.vsu.csf.greatChess.chessBoard.Coordinates;
 import ru.vsu.csf.greatChess.figures.*;
 
@@ -42,52 +41,62 @@ public class Game {
         return fieldHasFigure(coord.getI(), coord.getJ());
     }
 
-    public MoveStatus tryChooseFigure(Coordinates coord) {
+    public GameStatus tryChooseFigure(Coordinates coord) {
         return tryChooseFigure(coord.getI(), coord.getJ());
     }
-
-    public MoveStatus tryChooseFigure(int i, int j) {
+    public GameStatus tryChooseField(int i, int j){
+        if (currentFigure == null){
+            return tryChooseFigure(i, j);
+        } else{
+            return tryMoveFigureTo(i, j);
+        }
+    }
+    public GameStatus tryChooseFigure(int i, int j) {
         if (!coordinatesAreRight(i, j)){
-            return MoveStatus.WRONG_COORD;
+            return GameStatus.INVALID_COORD;
         }
         if (!fieldHasFigure(i, j)){
-            return MoveStatus.FIELD_EMPTY;
+            return GameStatus.FIELD_EMPTY;
         }
         if (isWhiteMove){
             if (chessBoard.getBoardField(i, j).getFigure().getColor() == Color.BLACK){
-                return MoveStatus.WRONG_COLOR;
+                return GameStatus.WRONG_COLOR;
             }
         } else {
             if (chessBoard.getBoardField(i, j).getFigure().getColor() == Color.WHITE){
-                return MoveStatus.WRONG_COLOR;
+                return GameStatus.WRONG_COLOR;
             }
         }
         currentFigure = chessBoard.getBoardField(i, j).getFigure();
-        return MoveStatus.CORRECT;
+        return GameStatus.FIGURE_CHOSEN;
     }
 
 
-    public MoveStatus tryMoveFigureTo(int i, int j){ // передавать сразу field, проверку для координат
+    public GameStatus tryMoveFigureTo(int i, int j){ // передавать сразу field, проверку для координат
         if (!coordinatesAreRight(i, j)){
-            return MoveStatus.WRONG_COORD;
+            currentFigure = null;
+            return GameStatus.INVALID_COORD;
         }
         if (!currentFigure.canMoveTo(chessBoard.getBoardField(i, j))){
-            return MoveStatus.CANT_MOVE;
+            currentFigure = null;
+            return GameStatus.CANT_MOVE;
         }
         if (checkMateOperator.kingIsUnderAttackIfFigureIsMovedTo(currentFigure, chessBoard.getBoardField(i, j))){
-            return MoveStatus.KING_UNDER_ATTACK;
+            currentFigure = null;
+            return GameStatus.KING_UNDER_ATTACK;
         }
         currentFigure.moveTo(chessBoard.getBoardField(i, j));
         currentFigure = chessBoard.getBoardField(i, j).getFigure(); // на случай, если пешка превратилась в ферзя
-        MoveStatus status = checkMateOperator.checkGameStatus(currentFigure);
-        if (status == MoveStatus.WHITE_MATED || status == MoveStatus.BLACK_MATED){
+        GameStatus status = checkMateOperator.checkGameStatus(currentFigure);
+        if (status == GameStatus.WHITE_MATED || status == GameStatus.BLACK_MATED){
             gameIsEnded = true;
         }
         isWhiteMove = !isWhiteMove;
+        currentFigure = null;
         return status;
     }
 
-    public MoveStatus tryMoveFigureTo(Coordinates coord){
+    public GameStatus tryMoveFigureTo(Coordinates coord){
         return tryMoveFigureTo(coord.getI(), coord.getJ());
     }
 }

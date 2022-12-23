@@ -7,10 +7,10 @@ import ru.vsu.csf.greatChess.figures.*;
 import java.awt.*;
 import java.util.Scanner;
 
-public class ConsoleGame {
+public class ConsoleApp {
     private Game game = new Game();
 
-    public void startConsoleGame() throws Exception {
+    public void startConsoleApp() throws Exception {
         drawChessBoard(game.getChessBoard());
         Scanner scanner = new Scanner(System.in);
 
@@ -20,7 +20,7 @@ public class ConsoleGame {
             int i = Math.abs(scanner.nextInt() - 10);
 
             switch (game.tryChooseFigure(i, j)) {
-                case WRONG_COORD:
+                case INVALID_COORD:
                     System.out.println("Неверные координаты клетки!");
                     continue;
                 case FIELD_EMPTY:
@@ -36,7 +36,7 @@ public class ConsoleGame {
             int wantedI = Math.abs(scanner.nextInt() - 10);
 
             switch (game.tryMoveFigureTo(wantedI, wantedJ)) {
-                case WRONG_COORD:
+                case INVALID_COORD:
                     System.out.println("Неверные координаты клетки!");
                     continue;
                 case WRONG_COLOR:
@@ -48,7 +48,7 @@ public class ConsoleGame {
                 case KING_UNDER_ATTACK:
                     System.out.println("Нельзя сделать такой ход, шах королю!");
                     continue;
-                case CORRECT:
+                case FIGURE_MOVED:
                     continue;
                 case WHITE_CHECKED:
                     System.out.println("Шах белым!");

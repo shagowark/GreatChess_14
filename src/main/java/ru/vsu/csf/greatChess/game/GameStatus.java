@@ -1,10 +1,11 @@
 package ru.vsu.csf.greatChess.game;
 
-public enum MoveStatus {
+public enum GameStatus {
     FIELD_EMPTY,
     WRONG_COLOR,
-    WRONG_COORD,
-    CORRECT,
+    INVALID_COORD,
+    FIGURE_CHOSEN,
+    FIGURE_MOVED,
     KING_UNDER_ATTACK,
     CANT_MOVE,
     WHITE_CHECKED,
