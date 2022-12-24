@@ -123,8 +123,8 @@ public class DrawPanel extends JPanel {
     public void setReachable(List<ChessBoardField> reachable) {
         this.reachable = reachable;
     }
-    // отдельный класс mouseListener extend MouseAdapter передавать Game или доску или панельку. Преобразует
-    // координаты клика в координаты доски.
-    // Отрисовка клеток (с/без фигурой) в отдельный класс FieldRenderer
+    // todo Listener преобразует координаты клика в координаты доски.
+    //  отрисовка клеток с фигурой в отдельный класс FieldRenderer
+
 
 }

@@ -14,41 +14,37 @@ public class ConsoleApp {
         drawChessBoard(game.getChessBoard());
         Scanner scanner = new Scanner(System.in);
 
+        System.out.println("Введите номер клетки, на которой стоит фигура, которой хотите походить");
         while (!game.isGameEnded()) {
-            System.out.println("Введите номер клетки, на которой стоит фигура, которой хотите походить");
             int j = scanner.next().charAt(0) - 97;
             int i = Math.abs(scanner.nextInt() - 10);
 
-            switch (game.tryChooseFigure(i, j)) {
+            switch (game.tryChooseField(i, j)) {
                 case INVALID_COORD:
                     System.out.println("Неверные координаты клетки!");
+                    System.out.println("Введите номер клетки, на которой стоит фигура, которой хотите походить");
                     continue;
                 case FIELD_EMPTY:
                     System.out.println("Это пустая клетка!");
+                    System.out.println("Введите номер клетки, на которой стоит фигура, которой хотите походить");
                     continue;
                 case WRONG_COLOR:
                     System.out.println("Ход другого игрока!");
+                    System.out.println("Введите номер клетки, на которой стоит фигура, которой хотите походить");
                     continue;
-            }
-
-            System.out.println("Введите номер клетки, куда хотите походить");
-            int wantedJ = scanner.next().charAt(0) - 97;
-            int wantedI = Math.abs(scanner.nextInt() - 10);
-
-            switch (game.tryMoveFigureTo(wantedI, wantedJ)) {
-                case INVALID_COORD:
-                    System.out.println("Неверные координаты клетки!");
-                    continue;
-                case WRONG_COLOR:
-                    System.out.println("Ход другого игрока");
+                case FIGURE_CHOSEN:
+                    System.out.println("Введите номер клетки, куда хотите походить");
                     continue;
                 case CANT_MOVE:
                     System.out.println("Нельзя сделать такой ход!");
+                    System.out.println("Введите номер клетки, на которой стоит фигура, которой хотите походить");
                     continue;
                 case KING_UNDER_ATTACK:
                     System.out.println("Нельзя сделать такой ход, шах королю!");
+                    System.out.println("Введите номер клетки, на которой стоит фигура, которой хотите походить");
                     continue;
                 case FIGURE_MOVED:
+                    System.out.println("Введите номер клетки, на которой стоит фигура, которой хотите походить");
                     continue;
                 case WHITE_CHECKED:
                     System.out.println("Шах белым!");

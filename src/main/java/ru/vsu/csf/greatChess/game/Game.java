@@ -51,7 +51,7 @@ public class Game {
             return tryMoveFigureTo(i, j);
         }
     }
-    public GameStatus tryChooseFigure(int i, int j) {
+    private GameStatus tryChooseFigure(int i, int j) {
         if (!coordinatesAreRight(i, j)){
             return GameStatus.INVALID_COORD;
         }
@@ -72,7 +72,7 @@ public class Game {
     }
 
 
-    public GameStatus tryMoveFigureTo(int i, int j){ // передавать сразу field, проверку для координат
+    private GameStatus tryMoveFigureTo(int i, int j){ // передавать сразу field, проверку для координат
         if (!coordinatesAreRight(i, j)){
             currentFigure = null;
             return GameStatus.INVALID_COORD;
