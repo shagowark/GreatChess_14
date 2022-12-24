@@ -51,6 +51,9 @@ public class Game {
             return tryMoveFigureTo(i, j);
         }
     }
+    public GameStatus tryChooseField(Coordinates coord){
+        return tryChooseField(coord.getI(), coord.getJ());
+    }
     private GameStatus tryChooseFigure(int i, int j) {
         if (!coordinatesAreRight(i, j)){
             return GameStatus.INVALID_COORD;
@@ -98,5 +101,13 @@ public class Game {
 
     public GameStatus tryMoveFigureTo(Coordinates coord){
         return tryMoveFigureTo(coord.getI(), coord.getJ());
+    }
+
+    public void setCurrentFigure(Figure currentFigure) {
+        this.currentFigure = currentFigure;
+    }
+
+    public CheckMateOperator getCheckMateOperator() {
+        return checkMateOperator;
     }
 }

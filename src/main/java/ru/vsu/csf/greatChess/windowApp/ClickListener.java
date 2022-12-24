@@ -24,13 +24,17 @@ public class ClickListener extends MouseAdapter {
 
     @Override
     public void mouseClicked(MouseEvent e) {
-        Game game = drawPanel.getGame();
         int FIELD_SIZE = drawPanel.getFieldSize();
-
         int j = e.getX() / FIELD_SIZE - 1;
         int i = e.getY() / FIELD_SIZE - 1;
+        clickedField = drawPanel.getGame().getChessBoard().getBoardField(i, j);
+        drawMove(i, j);
+    }
+
+    public void drawMove(int i, int j){
+        Game game = drawPanel.getGame();
+
         ChessBoardField currentField = game.getChessBoard().getBoardField(i, j);
-        clickedField = currentField;
         if (!game.coordinatesAreRight(i, j)) {
             drawPanel.setCurrentField(null);
             drawPanel.setReachable(null);
@@ -74,6 +78,5 @@ public class ClickListener extends MouseAdapter {
             }
         }
     }
-
 
 }

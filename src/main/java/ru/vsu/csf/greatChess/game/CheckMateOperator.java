@@ -166,4 +166,15 @@ public class CheckMateOperator {
         return false;
     }
 
+    public boolean figureCanMoveSomewhere(Figure figure){
+        for (int i = 0; i < chessBoard.getSIZE_OF_BOARD(); i++){
+            for (int j = 0; j < chessBoard.getSIZE_OF_BOARD(); j++){
+                if (!kingIsUnderAttackIfFigureIsMovedTo(figure, chessBoard.getBoardField(i, j))){
+                    return true;
+                }
+            }
+        }
+        return false;
+    }
+
 }
