@@ -47,5 +47,9 @@ public class ChessBoardField {
     public int getJ() {
         return coordinates.getJ();
     }
+
+    public Coordinates getCoordinates() {
+        return coordinates;
+    }
 }
 
