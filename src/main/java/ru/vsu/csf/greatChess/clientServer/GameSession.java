@@ -1,6 +1,7 @@
 package ru.vsu.csf.greatChess.clientServer;
 
 import ru.vsu.csf.greatChess.chessBoard.Coordinates;
+import ru.vsu.csf.greatChess.figures.Figure;
 import ru.vsu.csf.greatChess.game.CheckMateOperator;
 import ru.vsu.csf.greatChess.game.Game;
 import ru.vsu.csf.greatChess.game.GameStatus;
@@ -19,12 +20,12 @@ public class GameSession implements Runnable {
     private Socket socket;
     private BufferedReader in;
     private PrintWriter out;
-    private SimpleBot bot = new SimpleBot();
+    private SimpleBot bot;
 
     public GameSession(Socket socket) {
         game = new Game();
         this.socket = socket;
-
+        this.bot = new SimpleBot(game);
     }
 
     @Override
@@ -62,32 +63,15 @@ public class GameSession implements Runnable {
 
             StringBuilder serverMove = new StringBuilder();
             if (result == FIGURE_MOVED || result == WHITE_CHECKED || result == BLACK_CHECKED) {
-                while (true) {
-                    Coordinates botMove = bot.generateCoord(game.getChessBoard().getSIZE_OF_BOARD());
-                    while (game.tryChooseField(botMove) != FIGURE_CHOSEN) {
-                        botMove = bot.generateCoord(game.getChessBoard().getSIZE_OF_BOARD());
-                    }
-                    Coordinates figureChosenOn = botMove;
-                    CheckMateOperator operator = game.getCheckMateOperator();
-                    if (!operator.figureCanMoveSomewhere(game.getChessBoard().getBoardField(figureChosenOn).getFigure())) {
-                        continue; //todo перенести всю хуйню в бота, криво работает figurecanmovesomewhere
-                    }
-                    serverMove.append(" ! ");
-                    serverMove.append(botMove.getI());
-                    serverMove.append(" ");
-                    serverMove.append(botMove.getJ());
-
-                    while (game.tryChooseField(botMove) != FIGURE_MOVED) {
-                        game.setCurrentFigure(game.getChessBoard().getBoardField(figureChosenOn).getFigure());
-                        botMove = bot.generateCoord(game.getChessBoard().getSIZE_OF_BOARD());
-
-                    }
-                    serverMove.append(" ");
-                    serverMove.append(botMove.getI());
-                    serverMove.append(" ");
-                    serverMove.append(botMove.getJ());
-                    break;
-                }
+                BotMove botMove = bot.generateMove();
+                serverMove.append(" ! ");
+                serverMove.append(botMove.getChosenField().getI());
+                serverMove.append(" ");
+                serverMove.append(botMove.getChosenField().getJ());
+                serverMove.append(" ");
+                serverMove.append(botMove.getWantedField().getI());
+                serverMove.append(" ");
+                serverMove.append(botMove.getWantedField().getJ());
             }
             System.out.println("To client: " + answer + serverMove);
             out.println(answer + serverMove);

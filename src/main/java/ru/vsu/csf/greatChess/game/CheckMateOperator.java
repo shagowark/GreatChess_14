@@ -167,11 +167,19 @@ public class CheckMateOperator {
     }
 
     public boolean figureCanMoveSomewhere(Figure figure){
-        for (int i = 0; i < chessBoard.getSIZE_OF_BOARD(); i++){
-            for (int j = 0; j < chessBoard.getSIZE_OF_BOARD(); j++){
-                if (!kingIsUnderAttackIfFigureIsMovedTo(figure, chessBoard.getBoardField(i, j))){
-                    return true;
-                }
+        if (figure.getClass() == King.class){
+            if (figure.getReachableFields().size() != 0 || figure.getKillableFields().size() != 0){
+                return true;
+            }
+        }
+        for (ChessBoardField field : figure.getReachableFields()){
+            if (!kingIsUnderAttackIfFigureIsMovedTo(figure, field)){
+                return true;
+            }
+        }
+        for (ChessBoardField field : figure.getKillableFields()){
+            if (!kingIsUnderAttackIfFigureIsMovedTo(figure, field)){
+                return true;
             }
         }
         return false;
