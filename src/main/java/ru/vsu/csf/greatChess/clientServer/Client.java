@@ -79,4 +79,4 @@ public class Client {
         }
         socket.close();
     }
-} //todo 2 клиента либо бот
+}

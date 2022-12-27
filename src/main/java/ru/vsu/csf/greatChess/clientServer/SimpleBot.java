@@ -23,8 +23,8 @@ public class SimpleBot {
     }
 
     public Coordinates generateCoord(int sizeOfBoard){
-        int i = random.nextInt(10);
-        int j = random.nextInt(10);
+        int i = random.nextInt(sizeOfBoard);
+        int j = random.nextInt(sizeOfBoard);
         return new Coordinates(i, j);
     }
 
